@@ -66,14 +66,11 @@ $db = new DB();
            </thead>
            <tbody>
             <?php 
-        //    $sql = "SELECT * FROM users";
-
-        // $sql = "SELECT users.* , user_images.file_path FROM users LEFT JOIN  user_images ON users.id = user_images.user_id GROUP BY users.id";
-
+        
         $sql = "SELECT users.*, GROUP_CONCAT(user_images.file_path SEPARATOR ',') AS photos FROM users 
         LEFT JOIN user_images ON users.id = user_images.user_id GROUP BY users.id";
 
-           $users = $db->select($sql);
+       $users = $db->select($sql);
 
            if(!empty($users)){
             foreach($users as $user) { ?>
@@ -116,7 +113,6 @@ $db = new DB();
    </div>
 </div>
 </div>
-
  
 <!-- Add Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -508,6 +504,10 @@ $db = new DB();
             e.preventDefault();
             let user = $(this).data('user');
             // let imageId = (user.id);
+
+            console.log(user);
+
+
             $('#update_id').val(user.id);
             $('#ename').val(user.name);
             $('#ephone').val(user.phone);
