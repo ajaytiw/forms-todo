@@ -117,6 +117,8 @@ $db = new DB();
 </div>
 </div>
 
+
+
  
 <!-- Add Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -240,6 +242,7 @@ $db = new DB();
                     <input type="text" class="form-control" id="ephone" name="ephone" placeholder="Enter Mobile No">
                 </div>
             </div>
+
             <div class="form-row">
                 <div class="form-group col-md-6">
                     <label for="emailId">Email Id* </label>
@@ -250,6 +253,7 @@ $db = new DB();
                     <input type="text" class="form-control" id="eaddress" name="eaddress" placeholder="Enter Address">
                 </div>
             </div>
+
             <div class="form-row">
                 <div class="form-group col-md-4">
                     <label for="role">Role*</label>
@@ -258,7 +262,9 @@ $db = new DB();
                         <option value="admin">Admin</option>
                         <option value="developer">Developer</option>
                     </select>
-                </div>            
+                </div>
+
+              
 
                 <div class="form-group col-md-4">
                     <label for="married">Marital Status*</label>
@@ -279,6 +285,7 @@ $db = new DB();
                     <input type="text" class="form-control" id="edesignation" name="edesignation" placeholder="Enter Designation">
                 </div>
             </div>
+
             <div class="form-row">
                 <div class="form-group col-md-6">
                     <label for="gender">Gender*</label>
@@ -291,12 +298,18 @@ $db = new DB();
                 </div>
                 <div class="form-group col-md-6">
                     <label for="uploadLogo">Upload Logo</label>
+
                     <div id="edit_upload_logo" class="file-display-container">
-                    </div>
+                            <!-- Photos will be displayed here -->
+                        </div>
                     <input type="file" class="form-control-file" id="euploadLogo" name="euploadLogo[]" accept="image/*" multiple>
+                    
+
                 </div>
             </div>
+
             <div class="form-row">
+               
                 <div class="form-group col-md-6">
                     <label for="date" class="col-form-label">DOB</label>
                     <input type="date" class="form-control" id="edob" name="edob" required>
@@ -323,6 +336,7 @@ $db = new DB();
    <script>
         $(document).ready(function() {
             $('#userTable').DataTable();
+
                 $('#add_user').validate({
                     rules: {
                         name: {
@@ -507,7 +521,8 @@ $db = new DB();
         $(document).on('click', '.edit_user', function(e) {
             e.preventDefault();
             let user = $(this).data('user');
-            // let imageId = (user.id);
+            console.log(user);
+
             $('#update_id').val(user.id);
             $('#ename').val(user.name);
             $('#ephone').val(user.phone);
@@ -523,135 +538,123 @@ $db = new DB();
             $('#action').val('update_user');
             $('#edit_exampleModal').modal('show');
 
-            if(user.photos){
-                let files = user.photos.split(',');
-                let fileContainer = $('#edit_upload_logo');
-                fileContainer.empty();
-                files.forEach(function(filePath, index) {
-                    let fileName = filePath.split('/').pop();
-                    let fileDiv = $(`
-                        <div class="file-item">
-                            <span class="file-name">${fileName}</span>
-                            <button type="button" class="remove-file" data-index="${index}" title="Remove">X</button>
-                        </div>
-                    `);
-                    fileContainer.append(fileDiv);
-                });
-            }
-        });
-
-
-        $(document).on('click', '.remove-file', function(){
-            let index = $(this).data('index');
+            let files = user.photos.split(',');
             let fileContainer = $('#edit_upload_logo');
-            $(this).closest('.file-item').remove();
+            fileContainer.empty();
+
+            files.forEach(function(filePath) {
+                let fileName = filePath.split('/').pop();
+                let fileDiv = $('<div>').addClass('file-name').text(fileName);
+                fileContainer.append(fileDiv);
+            });   
         });
+
 
 
         $('#edit_user').validate({
-            rules: {
-                ename: {
-                    required: true,
-                    minlength: 3
-                },
-                ephone: {
-                    required: true,
-                    digits: true,
-                    minlength: 10,
-                    maxlength: 10
-                },
-                eemail: {
-                    required: true,
-                    email: true
-                },
-                eaddress: {
-                    required: true,
-                    minlength: 10
-                },
-                erole: {
-                    required: true
-                },
-                edesignation: {
-                    required: true
-                },
-                egender: {
-                    required: true
-                },
-                emarried: {
-                    required: true
-                },
-                edob: {
-                    required: true,
-                    date: true
-                }
+        rules: {
+            ename: {
+                required: true,
+                minlength: 3
             },
-            messages: {
-                ename: {
-                    required: "Required field",
-                    minlength: "3 characters or more"
-                },
-                ephone: {
-                    required: "Required field",
-                    digits: "Must be numeric",
-                    minlength: "Minimum 10 digits",
-                    maxlength: "Maximum 10 digits"
-                },
-                eemail: {
-                    required: "Please enter your email",
-                    email: "Please enter a valid email address"
-                },
-                eaddress: {
-                    required: "Please enter your address",
-                    minlength: "Address must be at least 10 characters long"
-                },
-                erole: {
-                    required: "Please select a role"
-                },
-                edesignation: {
-                    required: "Please enter your designation"
-                },
-                egender: {
-                    required: "Please select your gender"
-                },
-                emarried: {
-                    required: "Please select your marital status"
-                },
-                edob: {
-                    required: "Please select your date of birth",
-                    date: "Please enter a valid date"
-                }
+            ephone: {
+                required: true,
+                digits: true,
+                minlength: 10,
+                maxlength: 10
             },
-            submitHandler: function(form) {
-                var formData = new FormData(form);
-                let action = $('#action').val();
-
-                if (action == 'update_user') {
-                    $.ajax({
-                        url: "ajax.php",
-                        type: "POST",
-                        data: formData,
-                        processData: false,
-                        contentType: false,
-                        dataType: "json",
-                        success: function(response) {
-                            if (response.code == 1) {
-                                alert(response.message);
-                                $('#edit_exampleModal').modal('hide');
-                                $('#edit_user')[0].reset();
-                                setTimeout(function() {
-                                    location.reload();
-                                }, 1000);
-                            } else {
-                                alert(response.message);
-                            }
-                        },
-                        error: function() {
-                            alert("something went wrong");
-                        }
-                    });
-                }
+            eemail: {
+                required: true,
+                email: true
+            },
+            eaddress: {
+                required: true,
+                minlength: 10
+            },
+            erole: {
+                required: true
+            },
+            edesignation: {
+                required: true
+            },
+            egender: {
+                required: true
+            },
+            emarried: {
+                required: true
+            },
+            edob: {
+                required: true,
+                date: true
             }
-        });
+        },
+        messages: {
+            ename: {
+                required: "Required field",
+                minlength: "3 characters or more"
+            },
+            ephone: {
+                required: "Required field",
+                digits: "Must be numeric",
+                minlength: "Minimum 10 digits",
+                maxlength: "Maximum 10 digits"
+            },
+            eemail: {
+                required: "Please enter your email",
+                email: "Please enter a valid email address"
+            },
+            eaddress: {
+                required: "Please enter your address",
+                minlength: "Address must be at least 10 characters long"
+            },
+            erole: {
+                required: "Please select a role"
+            },
+            edesignation: {
+                required: "Please enter your designation"
+            },
+            egender: {
+                required: "Please select your gender"
+            },
+            emarried: {
+                required: "Please select your marital status"
+            },
+            edob: {
+                required: "Please select your date of birth",
+                date: "Please enter a valid date"
+            }
+        },
+        submitHandler: function(form) {
+            var formData = new FormData(form);
+            let action = $('#action').val();
+
+            if (action == 'update_user') {
+                $.ajax({
+                    url: "ajax.php",
+                    type: "POST",
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    dataType: "json",
+                    success: function(response) {
+                        if (response.code == 1) {
+                            alert(response.message);
+                            $('#edit_exampleModal').modal('hide');
+                            $('#edit_user')[0].reset();
+                            setTimeout(function() {
+                                location.reload();
+                            }, 1000);
+                        } else {
+                            alert(response.message);
+                        }
+                    },
+                    error: function() {
+                        alert("something went wrong");
+                    }
+                });
+            }
+        }
+    });
 
     </script>
 

@@ -10,7 +10,6 @@ class DB {
     public $conn;
     public $last_insert_id;
    
-
     public function __construct()
     {
         $this->conn = new mysqli($this->host, $this->user, $this->pass, $this->dbname);
@@ -56,7 +55,6 @@ class DB {
     public function select($sql)
     {
         $result =  $this->conn->query($sql);
-
         if(mysqli_num_rows($result)>0)
         {
             return $result;

@@ -94,9 +94,7 @@ if (isset($_POST['id']) &&  $_POST['action'] == 'user_delete') {
     exit;
 }
 
-
 if(isset($_POST['update_id']) && $_POST['action'] == 'update_user') {
-
 
     $id = $_POST['update_id'];
     $name = $db->validate_data($_POST['ename']);
@@ -110,7 +108,6 @@ if(isset($_POST['update_id']) && $_POST['action'] == 'update_user') {
     $dob = $db->validate_data($_POST['edob']);
 
     $photos = $_FILES['euploadLogo'];
-
     
     $sql =  "UPDATE `users` SET `name`='$name',`email`='$email',`phone`='$phone',`address`='$address',`role`='$role',
         `designation`='$designation',`gender`='$gender',`marital_status`='$married_status',`dob`='$dob' WHERE id = $id";
@@ -151,4 +148,9 @@ if(isset($_POST['update_id']) && $_POST['action'] == 'update_user') {
     echo json_encode($return_array);
     exit;
 
+}
+
+if(isset($_POST['action']) && $_POST['action']=='remove-file'){
+    $filePath = $_POST['file_Path'];
+    echo($filePath);
 }
