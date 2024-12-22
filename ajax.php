@@ -62,9 +62,6 @@ if (isset($_POST['action']) && $_POST['action'] == 'add_user') {
 
 }
 
-
-
-
 if (isset($_POST['id']) &&  $_POST['action'] == 'user_delete') {
 
     $id = $_POST['id'];
