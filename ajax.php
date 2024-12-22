@@ -25,20 +25,25 @@ if (isset($_POST['action']) && $_POST['action'] == 'add_user') {
 
                 if (isset($photos['name'][0]) && !empty($photos['name'][0])) {
 
-                for ($i = 0; $i < count($photos['name']); $i++) {
-                    $tmpName = $photos['tmp_name'][$i];
-                    $fileName = uniqid() . "_" . basename($photos['name'][$i]);
-                    $filePath = 'uploads/' . $fileName;
 
-                    if (move_uploaded_file($tmpName, $filePath)) {
+                    if (!file_exists('uploads')) {
+                        mkdir('uploads', 0755, true);
+                    }                    
 
-                        $tmpName = $db->validate_data($tmpName);
-                        $filePath = $db->validate_data($filePath);
+                    for ($i = 0; $i < count($photos['name']); $i++) {
+                        $tmpName = $photos['tmp_name'][$i];
+                        $fileName = uniqid() . "_" . basename($photos['name'][$i]);
+                        $filePath = 'uploads/' . $fileName;
 
-                        $sql = "INSERT INTO user_images (user_id, filename, file_path) VALUES ($user_id, '$tmpName', '$filePath')";
-                        $db->insert($sql);
+                        if (move_uploaded_file($tmpName, $filePath)) {
+
+                            $tmpName = $db->validate_data($tmpName);
+                            $filePath = $db->validate_data($filePath);
+
+                            $sql = "INSERT INTO user_images (user_id, filename, file_path) VALUES ($user_id, '$tmpName', '$filePath')";
+                            $db->insert($sql);
+                        }
                     }
-                }
             }
            
             $return_array = array(
