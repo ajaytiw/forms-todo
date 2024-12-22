@@ -503,11 +503,7 @@ $db = new DB();
         $(document).on('click', '.edit_user', function(e) {
             e.preventDefault();
             let user = $(this).data('user');
-            // let imageId = (user.id);
-
             console.log(user);
-
-
             $('#update_id').val(user.id);
             $('#ename').val(user.name);
             $('#ephone').val(user.phone);
@@ -532,7 +528,7 @@ $db = new DB();
                     let fileDiv = $(`
                         <div class="file-item">
                             <span class="file-name">${fileName}</span>
-                            <button type="button" class="remove-file" data-index="${index}" title="Remove">X</button>
+                            <button type="button" class="remove-file" data-index="${index}" data-name = "${fileName}" title="Remove">X</button>
                         </div>
                     `);
                     fileContainer.append(fileDiv);
@@ -543,8 +539,28 @@ $db = new DB();
 
         $(document).on('click', '.remove-file', function(){
             let index = $(this).data('index');
+            let name = $(this).data('name');
             let fileContainer = $('#edit_upload_logo');
+            let action = 'remove-file'
             $(this).closest('.file-item').remove();
+
+
+            $.ajax({
+                url: 'ajax.php', 
+                type: 'POST',
+                dataType: "json",
+                data: { fileName: name, action: action }, 
+                success: function(response) {
+                    if (response.code == 1) {
+                    } else {
+                        alert('Error removing photo: ' + response.message);
+                    }
+                },
+                error: function() {
+                    alert('An error occurred while deleting the photo.');
+                }
+            });
+
         });
 
 

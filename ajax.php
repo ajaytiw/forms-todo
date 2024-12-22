@@ -153,6 +153,22 @@ if(isset($_POST['update_id']) && $_POST['action'] == 'update_user') {
 }
 
 if(isset($_POST['action']) && $_POST['action']=='remove-file'){
-    $filePath = $_POST['file_Path'];
-    echo($filePath);
+    $action =  $db->validate_data($_POST['action']);
+    $fileName =   $db->validate_data($_POST['fileName']);
+    $sql = "DELETE FROM user_images WHERE file_path = 'uploads/" . $fileName . "'";
+
+    if($db->delete($sql)){
+        $return_array = array(
+        'code' => 1,
+        'message' => 'File Removed'
+    );
+
+    }else{
+        $return_array = array(
+            'code' => 0,
+            'message' => 'something went wrong'
+        );
+    }
+    echo  json_encode($return_array);
+    exit;
 }
